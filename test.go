@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"github.com/hyperledger/fabric/protos/peer"
 )
@@ -25,7 +26,7 @@ func (t *SimpleAsset) Init(stub shim.ChaincodeStubInterface) peer.Response {
 
 	// if error occurs
 	if err != nil {
-		return shim.Error(fmt.Sprintf("Failed to create asset: %s", args[0])
+		return shim.Error(fmt.Sprintf("Failed to create asset: %s", args[0]))
 	}
 
 	// success
@@ -54,7 +55,7 @@ func (t *SimpleAsset) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	// Return the result as success payload 
+	// Return the result as success payload
 	return shim.Success([]byte(result))
 }
 
@@ -62,21 +63,21 @@ func (t *SimpleAsset) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
 // it will override the value with the new one
 
 func set(stub shim.ChaincodeStubInterface, args []string) (string, error) {
-	if len(args) !=2 {
-		return "" , fmt.Errorf("Incorrect arguments, Expecting a key and a value")
+	if len(args) != 2 {
+		return "", fmt.Errorf("Incorrect arguments, Expecting a key and a value")
 	}
 
 	err := stub.PutState(args[0], []byte(args[1]))
 
-	if err !=nil {
+	if err != nil {
 		return "", fmt.Errorf("Failed to set asset : %s", args[0])
 	}
-	return args[1], nil 
+	return args[1], nil
 }
 
 func get(stub shim.ChaincodeStubInterface, args []string) (string, error) {
-	if len(args) !=2 {
-		return "" , fmt.Errorf("Incorrect arguments, Expecting a key and a value")
+	if len(args) != 2 {
+		return "", fmt.Errorf("Incorrect arguments, Expecting a key and a value")
 	}
 
 	value, err := stub.GetState(args[0])
@@ -94,7 +95,10 @@ func get(stub shim.ChaincodeStubInterface, args []string) (string, error) {
 
 // main function starts up the chaincode in the container during instantiate
 func main() {
-	if err := shim.Start(new(SimpleAsset)); err != nil ){
+	err := shim.Start(new(SimpleAsset))
+	if err != nil {
 		fmt.Printf("Error Starting SimpleAsset chaincode : %s", err)
+	} else {
+		fmt.Printf("Starting chaincode function main() executed successfully")
 	}
 }
